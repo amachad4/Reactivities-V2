@@ -1,5 +1,7 @@
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +13,37 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+var env = builder.Environment;
+
+string certPath = "/home/andres/Desktop/The_Final_Boss/Reactivities/API/certs/localhost+2.pem";
+string keyPath = "/home/andres/Desktop/The_Final_Boss/Reactivities/API/certs/localhost+2-key.pem";
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    if (env.IsDevelopment()) // Check if in Development environment
+    {
+        // Load the certificate and key using X509Certificate2
+        var certificate = X509Certificate2.CreateFromPemFile(certPath, keyPath);
+
+        // Configure Kestrel to use the certificate for HTTPS on localhost
+        options.ListenLocalhost(5001, listenOptions =>
+        {
+            listenOptions.UseHttps(certificate);
+        });
+    }
+    else
+    {
+        // Production setup can go here (real certs)
+        // For example, options.ListenAnyIP(5001, listenOptions => { listenOptions.UseHttps("path_to_production_cert", "path_to_production_key"); });
+    }
+});
+
+builder.Services.AddCors();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "https://localhost:3000"));
 
 app.MapControllers();
 
