@@ -8,6 +8,8 @@
 
 *.pem
 *.csr
+*.db
+*.db-shm
 
 # User-specific files
 *.rsuser
