@@ -17,8 +17,8 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 var env = builder.Environment;
 
-string certPath = "/home/andres/Desktop/The_Final_Boss/Reactivities/API/certs/localhost+2.pem";
-string keyPath = "/home/andres/Desktop/The_Final_Boss/Reactivities/API/certs/localhost+2-key.pem";
+string certPath = "./certs/localhost+2.pem";
+string keyPath = "./certs/localhost+2-key.pem";
 
 builder.WebHost.ConfigureKestrel(options =>
 {
