@@ -7,24 +7,24 @@ import {
   Chip,
   Typography,
 } from "@mui/material";
+import { useActivites } from "../../../lib/types/hooks/useActivities";
 
 interface ActivityDashboardProps {
   activity: Activity;
   selectActivity: (id: string) => void;
-  deleteActivity: (id: string) => void;
 }
 
 export default function ActivityCard({
   activity,
   selectActivity,
-  deleteActivity,
 }: ActivityDashboardProps) {
+  const { deleteActivity } = useActivites();
   return (
     <Card sx={{ borderRadius: 3 }}>
       <CardContent>
         <Typography variant="h5">{activity.title}</Typography>
         <Typography sx={{ color: "text.secondary", mb: 1 }}>
-          {activity.date}
+          {new Date(activity.date).toISOString().split("T")[0]}
         </Typography>
         <Typography variant="body2">{activity.description}</Typography>
         <Typography variant="subtitle1">
@@ -44,7 +44,7 @@ export default function ActivityCard({
             View
           </Button>
           <Button
-            onClick={() => deleteActivity(activity.id)}
+            onClick={() => deleteActivity.mutate(activity.id)}
             color="error"
             size="medium"
             variant="contained"

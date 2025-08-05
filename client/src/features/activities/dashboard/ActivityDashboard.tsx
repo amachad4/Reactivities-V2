@@ -11,8 +11,6 @@ interface ActivityDashboardProps {
   openForm: (id: string) => void;
   closeForm: () => void;
   editMode: boolean;
-  submitForm: (activity: Activity) => void;
-  deleteActivity: (id:string) => void;
 }
 
 export default function ActivityDashboard({
@@ -23,23 +21,23 @@ export default function ActivityDashboard({
   openForm,
   closeForm,
   editMode,
-  submitForm,
-  deleteActivity
 }: ActivityDashboardProps) {
   return (
     <Grid2 container>
       <Grid2 size={7} sx={{ padding: "5px" }}>
-        <ActivityList activities={activities} selectActivity={selectActivity} deleteActivity={deleteActivity} />
+        <ActivityList activities={activities} selectActivity={selectActivity} />
       </Grid2>
       <Grid2 size={5}>
         {selectedActivity && !editMode && (
           <ActivityDetail
-            activity={selectedActivity}
+            selectedActivity={selectedActivity}
             cancelSelectActivity={cancelSelectActivity}
             openForm={openForm}
           />
         )}
-        {editMode && <ActivityForm submitForm={submitForm} closeForm={closeForm} activity={selectedActivity}/>}
+        {editMode && (
+          <ActivityForm closeForm={closeForm} activity={selectedActivity} />
+        )}
       </Grid2>
     </Grid2>
   );
